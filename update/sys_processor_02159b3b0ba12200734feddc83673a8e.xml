@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_processor">
+    <sys_processor action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <class_name/>
+        <description/>
+        <interactive>false</interactive>
+        <name>Insert Game player</name>
+        <parameters/>
+        <params_endpoint/>
+        <path>inset_game_player</path>
+        <path_endpoint>sn_bball_inset_game_player</path_endpoint>
+        <require_csrf>false</require_csrf>
+        <roles/>
+        <script><![CDATA[(function process(g_request, g_response, g_processor) {
+	
+	insertGamePlayer(g_request, g_processor);
+	
+	function getRegisteredUser(userId) {
+		var ru = new
+		GlideRecord('sn_bball_registered_player');
+		ru.addQuery('player', userId);
+		ru.query();
+		if(ru.next())
+			return ru.getUniqueValue();
+		return false;
+	}
+	function insertGamePlayer(g_request, g_processor) {
+		var playing = g_request.getParameter('playing');
+		var game = g_request.getParameter('game');
+		var player = getRegisteredUser(gs.getUserID());
+		if (player) {
+			var gp = new
+			GlideRecord('sn_bball_game_player');
+			gp.initialize();
+			gp.setValue('game', game);
+			gp.setValue('player', player);
+			gp.setValue('playing', playing);
+			gp.insert();
+		}
+		g_processor.redirect("/sn_bball_game.do?sys_id=" + game);
+	}
+
+})(g_request, g_response, g_processor);]]></script>
+        <sys_class_name>sys_processor</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2016-09-06 06:36:19</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>02159b3b0ba12200734feddc83673a8e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Insert Game player</sys_name>
+        <sys_package display_value="GameTimeNow" source="sn_bball">2811225c9f3112005ca47fc9c42e7022</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="GameTimeNow">2811225c9f3112005ca47fc9c42e7022</sys_scope>
+        <sys_update_name>sys_processor_02159b3b0ba12200734feddc83673a8e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2016-09-06 06:36:19</sys_updated_on>
+        <type>script</type>
+    </sys_processor>
+</record_update>
